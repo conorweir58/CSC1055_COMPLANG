@@ -1,0 +1,28 @@
+TEXT FILE FOR RANDOM IDEAS FOR FSA ASSIGNMENT - JAVA
+
+Use 4 pillars:
+- Abstraction
+- Encapsulation
+- Polymorphism
+- Inheritance
+
+Break up files by use and compile all together
+
+Keep it to one class per file
+
+Getters + Setters - Encapsulation
+
+Use your design patterns like controller
+
+Classes:
+    - State Class
+    - Transition Class
+    - FSA Class (Controller Class)
+
+Design Pattern: State Pattern
+    - Like a Finite State Machine anyways
+
+FOR NEXT TIME:
+    - CREATE STATE Class
+    - RESEARCH DESIGN PATTERN MORE
+    - RESEARCH HOW THE PROGRAM WILL BE RUN AND TESTED
