@@ -1,4 +1,5 @@
-public class State {
+public class State 
+{
     // Class Attributes
     private final int id;
     private boolean isAccepting;
