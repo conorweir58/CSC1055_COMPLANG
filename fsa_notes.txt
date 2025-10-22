@@ -22,7 +22,6 @@ Classes:
 Design Pattern: State Pattern
     - Like a Finite State Machine anyways
 
-FOR NEXT TIME:
-    - CREATE STATE Class
-    - RESEARCH DESIGN PATTERN MORE
-    - RESEARCH HOW THE PROGRAM WILL BE RUN AND TESTED
+TO DO LIST:
+- Revise error handling in fsa methods
+
