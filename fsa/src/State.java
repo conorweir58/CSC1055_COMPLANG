@@ -1,6 +1,6 @@
 public class State 
 {
-    // Class Attributes
+    // State Attributes
     private final int id;
     private boolean isAccepting;
     private boolean isStart;

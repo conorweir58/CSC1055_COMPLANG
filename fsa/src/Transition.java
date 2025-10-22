@@ -1,6 +1,6 @@
 public class Transition
 {
-    // Class Attributes
+    // Transition Attributes
     private final char symbol;
     private final State fromState;
     private final State toState;
