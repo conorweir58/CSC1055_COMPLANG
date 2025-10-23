@@ -1,12 +1,12 @@
 public class Transition
 {
     // Transition Attributes
-    private final char symbol;
+    private final String symbol;
     private final State fromState;
     private final State toState;
 
     // Constructor
-    public Transition(State fromState, char symbol, State toState)
+    public Transition(State fromState, String symbol, State toState)
     {
         this.symbol = symbol;
         this.fromState = fromState;
@@ -14,7 +14,7 @@ public class Transition
     }
 
     // Getters
-    public char getSymbol()
+    public String getSymbol()
     {
         return this.symbol;
     }
@@ -27,5 +27,11 @@ public class Transition
     public State getToState()
     {
         return this.toState;
+    }
+
+    @Override
+    public String toString()
+    {
+        return("Transition " + getSymbol() + " from " + getFromState().getID() + " to " + getToState().getID());
     }
 }

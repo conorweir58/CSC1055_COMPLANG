@@ -39,4 +39,10 @@ public class State
     {
         return this.isStart;
     }
+
+    @Override
+    public String toString()
+    {
+        return("State ID: " + getID() + " -> Accepting: " + getAccepting() + " StartState: " + getStart());
+    }
 }
