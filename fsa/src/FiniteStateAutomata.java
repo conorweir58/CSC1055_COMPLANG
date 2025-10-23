@@ -110,15 +110,15 @@ public class FiniteStateAutomata
 
     public Set<String> next(String givenStateID, String symbol)
     {
-        Set<String> nextSet = closure(givenStateID); // Tracks States which are possible to be reached next
+        Set<String> nextSet = new HashSet<>(); // Tracks States which are possible to be reached next -> Do a closure to 
         Stack<String> statesToNext = new Stack<>(); // Tracks states which must be checked to be "nexted" (checked if they can be reached)
 
         statesToNext.push(givenStateID);
         
-        for(String id : nextSet)
-        {
-            statesToNext.push(id);
-        }
+        // for(String id : nextSet)
+        // {
+        //     statesToNext.push(id);
+        // }
 
         while(!statesToNext.empty())
         {
