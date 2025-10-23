@@ -3,7 +3,7 @@ import java.util.*;
 public class FiniteStateAutomata
 {
     // FSA Attributes
-    private HashMap<Integer, State> states; // HashMap of State id to the State object -> keys prevent duplicate States
+    private HashMap<String, State> states; // HashMap of State id to the State object -> keys prevent duplicate States
     private Set<Transition> transitions; // HashSet so no duplicate transitions
     private State startState; // Only one start State allowed
 
@@ -22,7 +22,7 @@ public class FiniteStateAutomata
     }
 
     // Getters
-    public HashMap<Integer, State> getStates()
+    public HashMap<String, State> getStates()
     {
         return this.states;
     }
@@ -40,7 +40,7 @@ public class FiniteStateAutomata
     // FSA METHODS
 
     // Creates a new State and add it to set of States if it doesn't exist already
-    public void addState(int id, boolean isAccepting, boolean isStart)
+    public void addState(String id, boolean isAccepting, boolean isStart)
     {
         // If there is already a start state - kill program + throw error
         if(isStart && getstartState() != null)
@@ -66,15 +66,39 @@ public class FiniteStateAutomata
     }
 
     // Creates a Transition between 2 States -> Only valid if both states exist in the FSA
-    public void addTransition(int fromState_id, String symbol, int toState_id)
+    public void addTransition(String fromStateID, String symbol, String toStateID)
     {
-        if(!getStates().containsKey(fromState_id)) // If from state doesn't exist
+        if(!getStates().containsKey(fromStateID)) // If from state doesn't exist
         {
-            System.err.println("From State " + fromState_id + " does not exist! Transition not created!");
+            System.err.println("From State " + fromStateID + " does not exist! Transition not created!");
             return; // Return to continue input without adding transition
         }
 
-        getTransitions().add(new Transition(getStates().get(fromState_id), symbol, getStates().get(toState_id)));
+        getTransitions().add(new Transition(getStates().get(fromStateID), symbol, getStates().get(toStateID)));
     }
 
+    public Set<String> closure(String givenStateID)
+    {
+        Stack<String> statesToClose = new Stack<>();
+        Set<String> closureSet = new HashSet<>();
+
+        statesToClose.push(givenStateID);
+
+        while(!statesToClose.isEmpty())
+        {
+            State currState = getStates().get(statesToClose.pop());
+
+            for(Transition transition : getTransitions())
+            {
+                String currStateID = currState.getID();
+
+                if(transition.getFromState().equals(currState) && transition.getSymbol().equals(null))
+                {
+                    closureSet.add(currStateID);
+                    statesToClose.push(currState.getID());
+                }
+            }
+        }
+
+    }
 }
