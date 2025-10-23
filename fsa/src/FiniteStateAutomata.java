@@ -92,7 +92,7 @@ public class FiniteStateAutomata
             for(Transition transition : getTransitions())
             {
                 // Only gets transitions which are from the current state and are an epsilon transition
-                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null)
+                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null) // == as .equals() on null can't be done
                 {
                     String nextStateID = transition.getToState().getID();
 
@@ -110,33 +110,50 @@ public class FiniteStateAutomata
 
     public Set<String> next(String givenStateID, String symbol)
     {
-        Set<String> nextSet = new HashSet<>(); // Tracks States which are possible to be reached next -> Do a closure to 
-        Stack<String> statesToNext = new Stack<>(); // Tracks states which must be checked to be "nexted" (checked if they can be reached)
-
-        statesToNext.push(givenStateID);
-        
-        // for(String id : nextSet)
-        // {
-        //     statesToNext.push(id);
-        // }
-
-        while(!statesToNext.empty())
+        // Passed symbol cannot be null
+        if(symbol == null)
         {
-            String currStateID = statesToNext.pop(); // Get State from stack
+            System.err.println("Symbol for next() cannot be NULL! Stopping execution of next()..."); // throw error
+            return null; // return out of function
+        }
+
+        Set<String> nextSet = closure(givenStateID); // Tracks States which are possible to be reached next using the symbol once
+        Stack<String> statesToClose = new Stack<>(); // Tracks states which must be checked for epsilons (i.e. do a closure) after symbol
+
+        statesToClose.push(givenStateID); // Push given State as this will also need to be checked for symbols again but not in nextSet
+        
+        // Push all epsilon reachable states from givenState to stack to be checked for symbol reachability
+        for(String StateID : nextSet)
+        {
+            statesToClose.push(StateID);
+        }
+        
+        Set<String> tmp = new HashSet<>(); // Hashset for adding all states found using symbol (saves time looping again through all found states for more epsilon transitions)
+        while(!statesToClose.empty())
+        {
+            String currStateID = statesToClose.pop(); // Get State from stack
 
             for(Transition transition : getTransitions())
             {
-                if(transition.getFromState().getID().equals(currStateID) && (transition.getSymbol() == symbol || transition.getSymbol() == null)) // "==" as .equals() throws error on nulls
+                // Only gets transitions which are from the current state and are match the input symbol
+                if(transition.getFromState().getID().equals(currStateID) && symbol.equals(transition.getSymbol()))
                 {
                     String nextStateID = transition.getToState().getID();
 
                     if(!nextSet.contains(nextStateID))
                     {
                         nextSet.add(nextStateID);
-                        statesToNext.push(nextStateID);
+                        tmp.add(nextStateID);
                     }
                 }
+
             }
+        }
+
+        // Call closure on all states reached by the symbol after previous closure
+        for(String StateID : tmp)
+        {
+            nextSet.addAll(closure(StateID)); // Merges nextSet and the result of the closure on StateID
         }
 
         return nextSet;
