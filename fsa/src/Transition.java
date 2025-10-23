@@ -8,6 +8,12 @@ public class Transition
     // Constructor
     public Transition(State fromState, String symbol, State toState)
     {
+        // Error prevention - if epsilon is passed (the empty transition) rather than null just convert to null
+        if(symbol.equals("ε"))
+        {
+            symbol = null;
+        }
+
         this.symbol = symbol;
         this.fromState = fromState;
         this.toState = toState;

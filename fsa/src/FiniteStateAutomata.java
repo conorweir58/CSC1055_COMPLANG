@@ -68,12 +68,6 @@ public class FiniteStateAutomata
     // Creates a Transition between 2 States -> Only valid if both states exist in the FSA
     public void addTransition(int fromState_id, String symbol, int toState_id)
     {
-        // Error prevention - if epsilon is passed (the empty transition) rather than null just convert to null
-        if(symbol.equals("ε"))
-        {
-            symbol = null;
-        }
-
         if(!getStates().containsKey(fromState_id)) // If from state doesn't exist
         {
             System.err.println("From State " + fromState_id + " does not exist! Transition not created!");
