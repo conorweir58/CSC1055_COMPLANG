@@ -1,12 +1,12 @@
 public class State 
 {
     // State Attributes
-    private final int id;
+    private final String id; // String as id can be anything - Number or letter in FSAs
     private boolean isAccepting;
     private boolean isStart;
 
     // Constructor
-    public State(int id, boolean isAccepting, boolean isStart)
+    public State(String id, boolean isAccepting, boolean isStart)
     {
         this.id = id;
         this.isAccepting = isAccepting;
@@ -25,7 +25,7 @@ public class State
     }
 
     // Getters
-    public int getID()
+    public String getID()
     {
         return this.id;
     }
