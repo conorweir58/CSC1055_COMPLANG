@@ -91,14 +91,14 @@ public class FiniteStateAutomata
 
             for(Transition transition : getTransitions())
             {
-                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null)
+                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null) // Only gets transitions which are from the current state and are an epsilon transition
                 {
                     String nextStateID = transition.getToState().getID();
 
-                    if(!closureSet.contains(nextStateID))
+                    if(!closureSet.contains(nextStateID)) // If the next State has not yet been visited
                     {
-                        closureSet.add(nextStateID);
-                        statesToClose.push(nextStateID);
+                        closureSet.add(nextStateID); // Add next state to closure output set
+                        statesToClose.push(nextStateID); // Push the next state to be checked for further epsilon transitions
                     }
                 }
             }
