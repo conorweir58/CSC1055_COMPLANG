@@ -24,4 +24,4 @@ Design Pattern: State Pattern
 
 TO DO LIST:
 - Revise error handling in fsa methods
-
+- Test Closure and Next more in depth
