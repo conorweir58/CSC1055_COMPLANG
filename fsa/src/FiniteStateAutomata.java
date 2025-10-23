@@ -82,18 +82,19 @@ public class FiniteStateAutomata
         Stack<String> statesToClose = new Stack<>(); // Tracks states which must be checked for epsilons
         Set<String> closureSet = new HashSet<>(); // Tracks States which are possible to be reached by closure
 
+        // Push initial state to stack to begin loop
         statesToClose.push(givenStateID);
 
         while(!statesToClose.isEmpty())
         {
-            String currStateID = statesToClose.pop();
+            String currStateID = statesToClose.pop(); // Get State from stack
 
             for(Transition transition : getTransitions())
             {
-                String nextStateID = transition.getToState().getID();
-
                 if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null)
                 {
+                    String nextStateID = transition.getToState().getID();
+
                     if(!closureSet.contains(nextStateID))
                     {
                         closureSet.add(nextStateID);
