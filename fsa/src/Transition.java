@@ -9,7 +9,7 @@ public class Transition
     public Transition(State fromState, String symbol, State toState)
     {
         // Error prevention - if epsilon is passed (the empty transition) rather than null just convert to null
-        if(symbol.equals("ε"))
+        if(symbol == "ε")
         {
             symbol = null;
         }
