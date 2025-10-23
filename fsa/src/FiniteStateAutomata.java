@@ -79,26 +79,30 @@ public class FiniteStateAutomata
 
     public Set<String> closure(String givenStateID)
     {
-        Stack<String> statesToClose = new Stack<>();
-        Set<String> closureSet = new HashSet<>();
+        Stack<String> statesToClose = new Stack<>(); // Tracks states which must be checked for epsilons
+        Set<String> closureSet = new HashSet<>(); // Tracks States which are possible to be reached by closure
 
         statesToClose.push(givenStateID);
 
         while(!statesToClose.isEmpty())
         {
-            State currState = getStates().get(statesToClose.pop());
+            String currStateID = statesToClose.pop();
 
             for(Transition transition : getTransitions())
             {
-                String currStateID = currState.getID();
+                String nextStateID = transition.getToState().getID();
 
-                if(transition.getFromState().equals(currState) && transition.getSymbol().equals(null))
+                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null)
                 {
-                    closureSet.add(currStateID);
-                    statesToClose.push(currState.getID());
+                    if(!closureSet.contains(nextStateID))
+                    {
+                        closureSet.add(nextStateID);
+                        statesToClose.push(nextStateID);
+                    }
                 }
             }
         }
 
+        return closureSet;
     }
 }
