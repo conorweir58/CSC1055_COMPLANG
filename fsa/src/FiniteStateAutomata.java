@@ -77,13 +77,13 @@ public class FiniteStateAutomata
         getTransitions().add(new Transition(getStates().get(fromStateID), symbol, getStates().get(toStateID)));
     }
 
+    // Returns set of states that can be reached from the given state by following empty/epsilon transitions
     public Set<String> closure(String givenStateID)
     {
-        Stack<String> statesToClose = new Stack<>(); // Tracks states which must be checked for epsilons
         Set<String> closureSet = new HashSet<>(); // Tracks States which are possible to be reached by closure
+        Stack<String> statesToClose = new Stack<>(); // Tracks states which must be checked for epsilons
 
-        // Push initial state to stack to begin loop
-        statesToClose.push(givenStateID);
+        statesToClose.push(givenStateID); // Push initial state to stack to begin loop
 
         while(!statesToClose.isEmpty())
         {
@@ -91,7 +91,8 @@ public class FiniteStateAutomata
 
             for(Transition transition : getTransitions())
             {
-                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null) // Only gets transitions which are from the current state and are an epsilon transition
+                // Only gets transitions which are from the current state and are an epsilon transition
+                if(transition.getFromState().getID().equals(currStateID) && transition.getSymbol() == null)
                 {
                     String nextStateID = transition.getToState().getID();
 
@@ -105,5 +106,39 @@ public class FiniteStateAutomata
         }
 
         return closureSet;
+    }
+
+    public Set<String> next(String givenStateID, String symbol)
+    {
+        Set<String> nextSet = closure(givenStateID); // Tracks States which are possible to be reached next
+        Stack<String> statesToNext = new Stack<>(); // Tracks states which must be checked to be "nexted" (checked if they can be reached)
+
+        statesToNext.push(givenStateID);
+        
+        for(String id : nextSet)
+        {
+            statesToNext.push(id);
+        }
+
+        while(!statesToNext.empty())
+        {
+            String currStateID = statesToNext.pop(); // Get State from stack
+
+            for(Transition transition : getTransitions())
+            {
+                if(transition.getFromState().getID().equals(currStateID) && (transition.getSymbol() == symbol || transition.getSymbol() == null)) // "==" as .equals() throws error on nulls
+                {
+                    String nextStateID = transition.getToState().getID();
+
+                    if(!nextSet.contains(nextStateID))
+                    {
+                        nextSet.add(nextStateID);
+                        statesToNext.push(nextStateID);
+                    }
+                }
+            }
+        }
+
+        return nextSet;
     }
 }
