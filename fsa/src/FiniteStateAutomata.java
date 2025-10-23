@@ -3,18 +3,16 @@ import java.util.*;
 public class FiniteStateAutomata
 {
     // FSA Attributes
-    private Set<State> states; // Hashset so no duplicate States
-    private Set<Transition> transitions; // No duplicate transitions
-    private Set<State> acceptanceStates; // No duplicate acceptance states
+    private HashMap<Integer, State> states; // HashMap of State id to the State object -> keys prevent duplicate States
+    private Set<Transition> transitions; // HashSet so no duplicate transitions
     private State startState; // Only one start State allowed
 
     // Constructor
     public FiniteStateAutomata()
     {
-        this.states = new HashSet<>();
+        this.states = new HashMap<>();
         this.transitions = new HashSet<>();
-        this.acceptanceStates = new HashSet<>();
-        // this.startState = null;
+        this.startState = null;
     }
 
     // Setters
@@ -24,7 +22,7 @@ public class FiniteStateAutomata
     }
 
     // Getters
-    public Set<State> getStates()
+    public HashMap<Integer, State> getStates()
     {
         return this.states;
     }
@@ -34,38 +32,55 @@ public class FiniteStateAutomata
         return this.transitions;
     }
     
-    public Set<State> getAcceptanceStates()
-    {
-        return this.acceptanceStates;
-    }
-
-    public State getstartStates()
+    public State getstartState()
     {
         return this.startState;
     }
 
-    // FSA Methods
+    // FSA METHODS
 
     // Creates a new State and add it to set of States if it doesn't exist already
     public void addState(int id, boolean isAccepting, boolean isStart)
     {
-        this.states.add(new State(id, isAccepting, isStart));
-    }
-
-    // Creates a Transition between 2 States -> Only valid if both states exist in the FSA
-    public void addTransition(State fromState, char symbol, State toState)
-    {
-        if(!states.contains(fromState))
+        // If there is already a start state - kill program + throw error
+        if(isStart && getstartState() != null)
         {
-            System.err.println("From State does not exist");
+            System.err.println("This FSA already has a Start State! State " + id + " not added.");
+            System.exit(1); // Exit as missing states can break the FSA structure -> Disagree, should just overwrite isStart to false
         }
-        else if(!states.contains(toState))
+
+        if(!getStates().containsKey(id)) // if the state is not already in FSA
         {
-            System.err.println("To State does not exist");
+            State newState = new State(id, isAccepting, isStart);
+            getStates().put(id, newState);
+
+            if(isStart) // Will only pass for first start state - prevented afterwards above
+            {
+                setStartState(newState);
+            }
         }
         else
         {
-            this.transitions.add(new Transition(fromState, symbol, toState));
+            System.err.println("State " + id + " already exists!");
         }
     }
+
+    // Creates a Transition between 2 States -> Only valid if both states exist in the FSA
+    public void addTransition(int fromState_id, String symbol, int toState_id)
+    {
+        // Error prevention - if epsilon is passed (the empty transition) rather than null just convert to null
+        if(symbol.equals("ε"))
+        {
+            symbol = null;
+        }
+
+        if(!getStates().containsKey(fromState_id)) // If from state doesn't exist
+        {
+            System.err.println("From State " + fromState_id + " does not exist! Transition not created!");
+            return; // Return to continue input without adding transition
+        }
+
+        getTransitions().add(new Transition(getStates().get(fromState_id), symbol, getStates().get(toState_id)));
+    }
+
 }
