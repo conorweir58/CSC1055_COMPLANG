@@ -107,7 +107,7 @@ public class FiniteStateAutomata
 
         return closureSet;
     }
-
+    // Retursn the set of states that can be reached from the given state on having input the given (non-empty) input symbol
     public Set<String> next(String givenStateID, String symbol)
     {
         // Passed symbol cannot be null
@@ -129,7 +129,7 @@ public class FiniteStateAutomata
         }
         
         Set<String> tmp = new HashSet<>(); // Hashset for adding all states found using symbol (saves time looping again through all found states for more epsilon transitions)
-        while(!statesToClose.empty())
+        while(!statesToClose.empty()) // Can't iterate through hashset and make changes to it
         {
             String currStateID = statesToClose.pop(); // Get State from stack
 
@@ -146,7 +146,6 @@ public class FiniteStateAutomata
                         tmp.add(nextStateID);
                     }
                 }
-
             }
         }
 
@@ -158,4 +157,111 @@ public class FiniteStateAutomata
 
         return nextSet;
     }
+
+    public boolean accepts(String inputString) {
+        if (startState == null) {
+            System.err.println("No Start State provided to this FSA!");
+            return false;
+        }
+
+        Set<String> currStates = closure(getstartState().getID());
+        currStates.add(getstartState().getID()); // Include start state in current states
+        System.out.println("Closure of start state: " + currStates);
+
+        for(char c : inputString.toCharArray())
+        {
+            String input = Character.toString(c); // input must be String to be passed to next()
+            Set<String> nextStates = new HashSet<>(); // Tracks states that can be reached from that states in currStates -> resets every loop so no old states are left in it
+            
+            // Iterate over current states and get next states for each using input
+            for(String state : currStates)
+            {
+                nextStates.addAll(next(state, input)); // add all states accessible from previous states using the current input to nextStates
+            }
+
+            currStates = nextStates; // currentStates becomes nextStates for next iteration
+            if(currStates.isEmpty()) // if there are no states reachable -> impossible for any to be accepting so return false
+            {
+                return false;
+            }
+
+            System.out.println("Current States for input: " + input);
+            System.out.println(currStates);
+        }
+
+        for(String state : currStates)
+        {
+            State checkState = getStates().get(state);
+            System.out.println("Checking state for acceptance: " + checkState);
+            
+            if(checkState.getAccepting())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // public boolean accepts(String inputString)
+    // {
+    //     // Error check for start state
+    //     if(startState == null)
+    //     {
+    //         System.err.println("No Start State provided to this FSA! Cannot process input strings without Start State.");
+    //         return false;
+    //     }
+
+    //     // 'Pop' the first input symbol to process next() on for the FSA's start state
+    //     String input = inputString.substring(0, 1);
+    //     inputString = inputString.substring(1);
+
+    //     Set<String> currStates = next(getstartState().getID(), input);
+
+    //     // TESTING -> TO BE REMOVED
+    //     System.out.println("Current States for input: " + input);
+    //     System.out.println(currStates);
+
+    //     // Loop through remaining string + get each input individually
+    //     for(char c : inputString.toCharArray())
+    //     {
+    //         input = Character.toString(c); // input must be String to be passed to next() 
+    //         Set<String> nextStates = new HashSet<>(); // Tracks states that can be reached from that states in currStates -> resets every loop so no old states are left in it
+
+    //         // Loop through the states accessible using the previous input
+    //         for(String state : currStates)
+    //         {
+    //             nextStates.addAll(next(state, input)); // add all states accessible from previous states using the current input to nextStates
+    //             nextStates.add(state);
+    //             System.out.println("Next states: " + nextStates);
+    //         }
+
+    //         currStates = nextStates; // currentStates becomes nextStates for next iteration
+    //         System.out.println("Current States for input: " + input);
+    //         System.out.println(currStates);
+
+    //         if(currStates.isEmpty()) // if there are no states reachable -> impossible for any to be accepting so return false
+    //         {
+    //             return false;
+    //         }
+    //     }
+
+    //     System.out.println("Final Current States for string: ");
+    //     System.out.println(currStates);
+
+    //     State checkState = null;
+        
+    //     for(String state : currStates)
+    //     {
+    //         checkState = getStates().get(state);
+    //         System.out.println("Checking state for acceptance: " + checkState);
+            
+    //         if(checkState.getAccepting())
+    //         {
+    //             return true;
+    //         }
+    //     } 
+
+    //     return false;
+    // }
 }
