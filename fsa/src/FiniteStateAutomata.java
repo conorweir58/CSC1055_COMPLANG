@@ -159,14 +159,14 @@ public class FiniteStateAutomata
     }
 
     public boolean accepts(String inputString) {
-        if (startState == null) {
+        if (getstartState() == null) {
             System.err.println("No Start State provided to this FSA!");
             return false;
         }
 
         Set<String> currStates = closure(getstartState().getID());
         currStates.add(getstartState().getID()); // Include start state in current states
-        System.out.println("Closure of start state: " + currStates);
+        // System.out.println("Closure of start state: " + currStates);
 
         for(char c : inputString.toCharArray())
         {
@@ -185,14 +185,14 @@ public class FiniteStateAutomata
                 return false;
             }
 
-            System.out.println("Current States for input: " + input);
-            System.out.println(currStates);
+            // System.out.println("Current States for input: " + input);
+            // System.out.println(currStates);
         }
 
         for(String state : currStates)
         {
             State checkState = getStates().get(state);
-            System.out.println("Checking state for acceptance: " + checkState);
+            // System.out.println("Checking state for acceptance: " + checkState);
             
             if(checkState.getAccepting())
             {
@@ -203,65 +203,40 @@ public class FiniteStateAutomata
         return false;
     }
 
-    // public boolean accepts(String inputString)
-    // {
-    //     // Error check for start state
-    //     if(startState == null)
-    //     {
-    //         System.err.println("No Start State provided to this FSA! Cannot process input strings without Start State.");
-    //         return false;
-    //     }
+    public boolean deterministic()
+    {
+        if(getstartState() == null) // No start state -> cannot be deterministic
+        {
+            System.err.println("No Start State provided to this FSA! Cannot be considered deterministic without one.");
+            return true;
+        }
 
-    //     // 'Pop' the first input symbol to process next() on for the FSA's start state
-    //     String input = inputString.substring(0, 1);
-    //     inputString = inputString.substring(1);
+        if(getTransitions().isEmpty()) // No transitions means must be deterministic -> doesn't break any rules necessarily
+        {
+            System.err.println("This FSA has no transitions! It is considered deterministic by default.");
+            return true;
+        }
 
-    //     Set<String> currStates = next(getstartState().getID(), input);
+        HashMap<TransitionTupleKey, State> transitionMap = new HashMap<>(); // HashMap for tracking existing transitions of fromStates and symbols to toStates -> used to check for multiple transitions for same fromState and symbol
 
-    //     // TESTING -> TO BE REMOVED
-    //     System.out.println("Current States for input: " + input);
-    //     System.out.println(currStates);
-
-    //     // Loop through remaining string + get each input individually
-    //     for(char c : inputString.toCharArray())
-    //     {
-    //         input = Character.toString(c); // input must be String to be passed to next() 
-    //         Set<String> nextStates = new HashSet<>(); // Tracks states that can be reached from that states in currStates -> resets every loop so no old states are left in it
-
-    //         // Loop through the states accessible using the previous input
-    //         for(String state : currStates)
-    //         {
-    //             nextStates.addAll(next(state, input)); // add all states accessible from previous states using the current input to nextStates
-    //             nextStates.add(state);
-    //             System.out.println("Next states: " + nextStates);
-    //         }
-
-    //         currStates = nextStates; // currentStates becomes nextStates for next iteration
-    //         System.out.println("Current States for input: " + input);
-    //         System.out.println(currStates);
-
-    //         if(currStates.isEmpty()) // if there are no states reachable -> impossible for any to be accepting so return false
-    //         {
-    //             return false;
-    //         }
-    //     }
-
-    //     System.out.println("Final Current States for string: ");
-    //     System.out.println(currStates);
-
-    //     State checkState = null;
-        
-    //     for(String state : currStates)
-    //     {
-    //         checkState = getStates().get(state);
-    //         System.out.println("Checking state for acceptance: " + checkState);
+        for(Transition t : getTransitions())
+        {
+            if(t.getSymbol() == null) // If there is an epsilon transition -> not deterministic
+            {
+                return false;
+            }
             
-    //         if(checkState.getAccepting())
-    //         {
-    //             return true;
-    //         }
-    //     } 
+            TransitionTupleKey key = new TransitionTupleKey(t.getFromState().getID(), t.getSymbol()); // Key for tracking fromState and symbol
+            if(transitionMap.containsKey(key))
+            {
+                return false; // Multiple transitions from same fromState with same symbol -> Not DFA
+            }
+            else
+            {
+                transitionMap.put(key, t.getToState()); // Add transition to map if doesnt already exist to prevent future duplicates
+            }
+        }
 
-    //     return false;
-    // }
+        return true;
+    }
 }
