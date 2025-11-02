@@ -284,7 +284,7 @@ public class FiniteStateAutomata
             return;
         }
     
-        Set<String> inputSymbols = new HashSet<>();
+        Set<String> inputSymbols = new HashSet<>(); // Set of all input symbols in the FSA (excluding epsilon)
         for(Transition t : getTransitions())
         {
             if(t.getSymbol() != null) // Ignore epsilon transitions
@@ -304,8 +304,8 @@ public class FiniteStateAutomata
         String startStateID = String.join(",", initialDFAState); // StateID for DFA is comma separated list of NFA states it represents - ensures it will work with all other FSA methods
 
         State dfaStartState = new State(startStateID, isDFAAcceptState(initialDFAState), true); // Start state for DFA
-        dfaStates.put(startStateID, dfaStartState);
-        stateSetToIDMap.put(initialDFAState, startStateID);
+        dfaStates.put(startStateID, dfaStartState); // Add start state to DFA states
+        stateSetToIDMap.put(initialDFAState, startStateID); // Map initial DFA state set to its String DFA ID
 
         Queue<Set<String>> unprocessedStates = new LinkedList<>(); // Queue of unprocessed state sets
         unprocessedStates.add(initialDFAState);
@@ -317,25 +317,27 @@ public class FiniteStateAutomata
 
             for(String symbol : inputSymbols)
             {
-                Set<String> nextNFAStates = next(currDFAStateID, symbol);
+                Set<String> nextNFAStates = next(currDFAStateID, symbol); // Get next NFA states from all NFA states in the current DFA state set using the symbol
                 
                 for(String nfaStateID: currDFAState)
                 {
-                    nextNFAStates.addAll(next(nfaStateID, symbol));
+                    nextNFAStates.addAll(next(nfaStateID, symbol)); // Add next states from each NFA state in the current DFA state set
                 }
 
                 if(!nextNFAStates.isEmpty())
                 {
                     String nextDFAStateID = String.join(",", nextNFAStates);
 
-                    if(!dfaStates.containsKey(nextDFAStateID))
+                    if(!dfaStates.containsKey(nextDFAStateID)) // If this DFA state doesn't exist yet
                     {
+                        // Create new DFA state and add to structures
                         State newDFAState = new State(nextDFAStateID, isDFAAcceptState(nextNFAStates), false);
                         dfaStates.put(nextDFAStateID, newDFAState);
                         stateSetToIDMap.put(nextNFAStates, nextDFAStateID);
                         unprocessedStates.add(nextNFAStates);
                     }
 
+                    // Add transition from current DFA state to next DFA state on symbol
                     dfaTransitions.add(new Transition(dfaStates.get(currDFAStateID), symbol, dfaStates.get(nextDFAStateID)));
                 }
             }
