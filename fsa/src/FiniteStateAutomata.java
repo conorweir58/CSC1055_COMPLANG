@@ -16,6 +16,16 @@ public class FiniteStateAutomata
     }
 
     // Setters
+    public void setStates(HashMap<String, State> states)
+    {
+        this.states = states;
+    }
+
+    public void setTransitions(Set<Transition> transitions)
+    {
+        this.transitions = transitions;
+    }
+
     public void setStartState(State state)
     {
         this.startState = state;
@@ -308,9 +318,33 @@ public class FiniteStateAutomata
             for(String symbol : inputSymbols)
             {
                 Set<String> nextNFAStates = next(currDFAStateID, symbol);
-                // Set<String> nextDFAState = closure(nextNFAStates);
+                
+                for(String nfaStateID: currDFAState)
+                {
+                    nextNFAStates.addAll(next(nfaStateID, symbol));
+                }
+
+                if(!nextNFAStates.isEmpty())
+                {
+                    String nextDFAStateID = String.join(",", nextNFAStates);
+
+                    if(!dfaStates.containsKey(nextDFAStateID))
+                    {
+                        State newDFAState = new State(nextDFAStateID, isDFAAcceptState(nextNFAStates), false);
+                        dfaStates.put(nextDFAStateID, newDFAState);
+                        stateSetToIDMap.put(nextNFAStates, nextDFAStateID);
+                        unprocessedStates.add(nextNFAStates);
+                    }
+
+                    dfaTransitions.add(new Transition(dfaStates.get(currDFAStateID), symbol, dfaStates.get(nextDFAStateID)));
+                }
             }
         }
+
+        // Update FSA to be the new DFA
+        setStates(dfaStates);
+        setTransitions(dfaTransitions);
+        setStartState(dfaStartState);
     }
 
 }
