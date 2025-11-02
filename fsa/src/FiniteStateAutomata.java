@@ -239,4 +239,78 @@ public class FiniteStateAutomata
 
         return true;
     }
+
+    // Private helper method for toDFA() -> checks if a given set of NFA states contains an acceptance state -> therefore it is also DFA accptance
+    private boolean isDFAAcceptState(Set<String> nfaStates)
+    {
+        for(String stateID: nfaStates)
+        {
+            State s = getStates().get(stateID);
+
+            if(s != null && s.getAccepting())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void toDFA()
+    {
+        // Error handling blocks
+        if(deterministic())
+        {
+            System.out.println("This FSA is already deterministic! No conversion needed.");
+            return;
+        }
+        if(getStates().isEmpty())
+        {
+            System.err.println("This FSA has no states! Cannot convert to DFA.");
+            return;
+        }
+        if(getstartState() == null)
+        {
+            System.err.println("This FSA has no start state! All FSA's require a start State. Cannot convert to DFA.");
+            return;
+        }
+    
+        Set<String> inputSymbols = new HashSet<>();
+        for(Transition t : getTransitions())
+        {
+            if(t.getSymbol() != null) // Ignore epsilon transitions
+            {
+                inputSymbols.add(t.getSymbol());
+            }
+        }
+
+        // When coming back to this - helps understand that DFA is set of NFA stateIds, and these are stored as comma seperated strings, but for processing we use the sets
+
+        HashMap<String, State> dfaStates = new HashMap<>(); // Map of new state IDs to State objects
+        Set<Transition> dfaTransitions = new HashSet<>(); // Set of transitions for the DFA
+        Map<Set<String>, String> stateSetToIDMap = new HashMap<>(); // Map of sets of NFA states to DFA state IDs
+
+        Set<String> initialDFAState = closure(getstartState().getID()); // Start state for DFA is closure of NFA start state -> removes all epsilon transitions
+        initialDFAState.add(getstartState().getID());
+        String startStateID = String.join(",", initialDFAState); // StateID for DFA is comma separated list of NFA states it represents - ensures it will work with all other FSA methods
+
+        State dfaStartState = new State(startStateID, isDFAAcceptState(initialDFAState), true); // Start state for DFA
+        dfaStates.put(startStateID, dfaStartState);
+        stateSetToIDMap.put(initialDFAState, startStateID);
+
+        Queue<Set<String>> unprocessedStates = new LinkedList<>(); // Queue of unprocessed state sets
+        unprocessedStates.add(initialDFAState);
+
+        while(!unprocessedStates.isEmpty())
+        {
+            Set<String> currDFAState = unprocessedStates.poll(); // get the next unprocessed DFA state set
+            String currDFAStateID = stateSetToIDMap.get(currDFAState); // get the stateID of this DFA state set
+
+            for(String symbol : inputSymbols)
+            {
+                Set<String> nextNFAStates = next(currDFAStateID, symbol);
+                // Set<String> nextDFAState = closure(nextNFAStates);
+            }
+        }
+    }
+
 }

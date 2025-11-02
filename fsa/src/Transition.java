@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Transition
 {
     // Transition Attributes
@@ -35,6 +37,31 @@ public class Transition
         return this.toState;
     }
 
+    // For preventing duplicate transitions in hashsets/maps
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) // If same object
+        {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) // if compared object null or of different class
+        {
+            return false;
+        }
+
+        Transition that = (Transition) o;
+        return getFromState() == that.getFromState() && getSymbol() == that.getSymbol() && getToState() == that.getToState();
+    }
+
+    // For preventing duplicate transitions in hashsets/maps
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getFromState(), getSymbol(), getToState());
+    }
+
+    // For debugging
     @Override
     public String toString()
     {

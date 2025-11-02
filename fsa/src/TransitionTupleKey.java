@@ -1,5 +1,4 @@
 // Custom key class for tracking transitions in FiniteStateAutomata deterministic check -> No built-in tuple in Java
-// Based off of https://www.baeldung.com/java-custom-class-map-key
 
 import java.util.Objects;
 

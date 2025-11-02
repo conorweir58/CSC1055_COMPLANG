@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class State 
 {
     // State Attributes
@@ -40,6 +42,31 @@ public class State
         return this.isStart;
     }
 
+    // For preventing duplicate states in hashsets/maps
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) // If same object
+        {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) // if compared object null or of different class
+        {
+            return false;
+        }
+
+        State that = (State) o;
+        return getID() == that.getID();
+    }
+
+    // For preventing duplicate states in hashsets/maps
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getID());
+    }
+
+    // For debugging
     @Override
     public String toString()
     {
