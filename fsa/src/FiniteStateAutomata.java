@@ -348,5 +348,4 @@ public class FiniteStateAutomata
         setTransitions(dfaTransitions);
         setStartState(dfaStartState);
     }
-
 }
