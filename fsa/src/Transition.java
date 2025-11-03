@@ -65,6 +65,6 @@ public class Transition
     @Override
     public String toString()
     {
-        return("Transition " + getSymbol() + " from " + getFromState().getID() + " to " + getToState().getID());
+        return("Transition: " + getFromState().getID() + " -- " + getSymbol() + " --> " + getToState().getID());
     }
 }
