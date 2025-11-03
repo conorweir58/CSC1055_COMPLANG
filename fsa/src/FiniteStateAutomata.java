@@ -74,6 +74,12 @@ public class FiniteStateAutomata
         }
     }
 
+    // Method Overload if isAccepting and isStart arent specified
+    public void addState(String id)
+    {
+        addState(id, false, false);
+    }
+
     // Creates a Transition between 2 States -> Only valid if both states exist in the FSA
     public void addTransition(String fromStateID, String symbol, String toStateID)
     {
