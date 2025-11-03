@@ -1,5 +1,4 @@
 import java.util.Set;
-import java.util.HashSet;
 
 public class TestFSA
 {
@@ -122,8 +121,68 @@ public class TestFSA
         System.out.println("Next from S1 on null: " + nextS1null); // Error check - should be null
 
         System.out.println();
-        System.out.println("------ Testing Next on States -----");
+        System.out.println("------ Testing Accepts on FSA -----");
         System.out.println();
+
+        // Testing Accepts
+        String testInput1 = "aabb";
+        System.out.println("FSA accepts '" + testInput1 + "': " + fsa.accepts(testInput1)); // true - S0 -> S1 -> S2 -> S3 -> S6 -> S7 -> S8 -> S9 -> S10
+
+        String testInput2 = "aa";
+        System.out.println("FSA accepts '" + testInput2 + "': " + fsa.accepts(testInput2)); // false - ends at S8 which is not accepting
+
+        String testInput3 = "aabbb";
+        System.out.println("FSA accepts '" + testInput3 + "': " + fsa.accepts(testInput3)); // false - no transition from S10 for "b" therefore not accepted
+
+        String testInput4 = "";
+        System.out.println("FSA accepts '" + testInput4 + "': " + fsa.accepts(testInput4)); // false - empty string, only allows for epsilon transitions which do not reach accepting state
+
+        String testInput5 = "abcdefg";
+        System.out.println("FSA accepts '" + testInput5 + "': " + fsa.accepts(testInput5)); // false - no valid transitions cdefg
+
+        System.out.println();
+        System.out.println("------ Testing Deterministic on FSA -----");
+        System.out.println();
+
+        // Testing Deterministic
+        boolean result = fsa.deterministic();
+        System.out.println("FSA is Deterministic: " + result); // false - has epsilon transitions but no same symbol transitions from same state
+
+        System.out.println();
+        System.out.println("------ Testing toDFA() on FSA -----");
+        System.out.println();
+
+        System.out.println("Before conversion to DFA:");
+        System.out.println("Is Deterministic:" );
+        System.out.println("Expected: false");
+        System.out.println("Result:   " + result);
+
+        System.out.println();
+
+        fsa.toDFA();
+        System.out.println("After conversion to DFA:");
+        result = fsa.deterministic();
+        System.out.println("Is Deterministic:" );
+        System.out.println("Expected: true");
+        System.out.println("Result:   " + result);
+
+        System.out.println();
+
+        System.out.println("States in DFA after conversion:");
+        System.out.println();
+        for(State state : fsa.getStates().values())
+        {
+            System.out.println(state);
+        }
+
+        System.out.println();
+
+        System.out.println("Transitions in Dfa after conversion:");
+        System.out.println();
+        for(Transition transition : fsa.getTransitions())
+        {
+            System.out.println(transition);
+        }
     }
 
     private static void printTestTitle()
