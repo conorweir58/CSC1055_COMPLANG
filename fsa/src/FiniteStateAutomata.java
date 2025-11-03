@@ -316,7 +316,7 @@ public class FiniteStateAutomata
 
             for(String symbol : inputSymbols)
             {
-                Set<String> nextNFAStates = next(currDFAStateID, symbol); // Get next NFA states from all NFA states in the current DFA state set using the symbol
+                Set<String> nextNFAStates = new HashSet<>(); // Set of NFA states reachable from currDFAState on input symbol
                 
                 for(String nfaStateID: currDFAState)
                 {
