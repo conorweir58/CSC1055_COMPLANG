@@ -89,6 +89,12 @@ public class FiniteStateAutomata
             return; // Return to continue input without adding transition
         }
 
+        if(!getStates().containsKey(toStateID)) // If to state doesn't exist
+        {
+            System.err.println("To State " + toStateID + " does not exist! Transition not created!");
+            return; // Return to continue input without adding transition
+        }
+
         // Duplicate transitions automatically prevented by HashSet
         getTransitions().add(new Transition(getStates().get(fromStateID), symbol, getStates().get(toStateID)));
     }
