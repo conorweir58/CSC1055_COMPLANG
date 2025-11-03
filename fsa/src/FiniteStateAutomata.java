@@ -74,7 +74,7 @@ public class FiniteStateAutomata
         }
     }
 
-    // Method Overload if isAccepting and isStart arent specified
+    // Method Overload if isAccepting and isStart arent specified - Polymorphism
     public void addState(String id)
     {
         addState(id, false, false);
