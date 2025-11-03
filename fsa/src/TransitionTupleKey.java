@@ -7,12 +7,14 @@ public class TransitionTupleKey
     private final String fromStateID;
     private final String symbol;
 
+    // Constructor
     public TransitionTupleKey(String fromStateID, String symbol)
     {
         this.fromStateID = fromStateID;
         this.symbol = symbol;
     }
 
+    // Getters - Encapsulation
     public String getFromStateID()
     {
         return this.fromStateID;

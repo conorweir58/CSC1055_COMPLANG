@@ -15,7 +15,7 @@ public class State
         this.isStart = isStart;
     }
 
-    // Setters
+    // Setters - Encapsulation
     public void setAccepting(boolean isAccepting)
     {
         this.isAccepting = isAccepting;
@@ -26,7 +26,7 @@ public class State
         this.isAccepting = isAccepting;
     }
 
-    // Getters
+    // Getters - Encapsulation
     public String getID()
     {
         return this.id;
@@ -43,7 +43,7 @@ public class State
     }
 
     // For preventing duplicate states in hashsets/maps
-    @Override
+    @Override // Polymorphism
     public boolean equals(Object o)
     {
         if(this == o) // If same object
@@ -60,7 +60,7 @@ public class State
     }
 
     // For preventing duplicate states in hashsets/maps
-    @Override
+    @Override // Polymorphism
     public int hashCode()
     {
         return Objects.hash(getID());

@@ -21,7 +21,7 @@ public class Transition
         this.toState = toState;
     }
 
-    // Getters
+    // Getters - Encapsulation
     public String getSymbol()
     {
         return this.symbol;
@@ -38,7 +38,7 @@ public class Transition
     }
 
     // For preventing duplicate transitions in hashsets/maps
-    @Override
+    @Override // Polymorphism
     public boolean equals(Object o)
     {
         if(this == o) // If same object
@@ -55,7 +55,7 @@ public class Transition
     }
 
     // For preventing duplicate transitions in hashsets/maps
-    @Override
+    @Override // Polymorphism
     public int hashCode()
     {
         return Objects.hash(getFromState(), getSymbol(), getToState());

@@ -15,7 +15,7 @@ public class FiniteStateAutomata
         this.startState = null;
     }
 
-    // Setters
+    // Setters - Encapsulation
     public void setStates(HashMap<String, State> states)
     {
         this.states = states;
@@ -31,7 +31,7 @@ public class FiniteStateAutomata
         this.startState = state;
     }
 
-    // Getters
+    // Getters - Encapsulation
     public HashMap<String, State> getStates()
     {
         return this.states;
@@ -55,8 +55,7 @@ public class FiniteStateAutomata
         // If there is already a start state - kill program + throw error
         if(isStart && getstartState() != null)
         {
-            System.err.println("This FSA already has a Start State! State " + id + " not added.");
-            System.exit(1); // Exit as missing states can break the FSA structure -> Disagree, should just overwrite isStart to false
+            throw new IllegalArgumentException("This FSA already has a Start State! State " + id + " not added.");
         }
 
         if(!getStates().containsKey(id)) // if the state is not already in FSA
@@ -124,7 +123,7 @@ public class FiniteStateAutomata
         if(symbol == null)
         {
             System.err.println("Symbol for next() cannot be NULL! Stopping execution of next()..."); // throw error
-            return null; // return out of function
+            return null; // return out of function but continue execution
         }
 
         Set<String> nextSet = closure(givenStateID); // Tracks States which are possible to be reached next using the symbol once
@@ -169,14 +168,16 @@ public class FiniteStateAutomata
     }
 
     public boolean accepts(String inputString) {
-        if (getstartState() == null) {
+
+        // if no startState - can't accept anything
+        if (getstartState() == null)
+        {
             System.err.println("No Start State provided to this FSA!");
-            return false;
+            return false; // Accepts is impossible without start state so return false but continue execution
         }
 
         Set<String> currStates = closure(getstartState().getID());
         currStates.add(getstartState().getID()); // Include start state in current states
-        // System.out.println("Closure of start state: " + currStates);
 
         for(char c : inputString.toCharArray())
         {
@@ -194,15 +195,11 @@ public class FiniteStateAutomata
             {
                 return false;
             }
-
-            // System.out.println("Current States for input: " + input);
-            // System.out.println(currStates);
         }
 
         for(String state : currStates)
         {
             State checkState = getStates().get(state);
-            // System.out.println("Checking state for acceptance: " + checkState);
             
             if(checkState.getAccepting())
             {
@@ -218,10 +215,10 @@ public class FiniteStateAutomata
         if(getstartState() == null) // No start state -> cannot be deterministic
         {
             System.err.println("No Start State provided to this FSA! Cannot be considered deterministic without one.");
-            return true;
+            return false;
         }
 
-        if(getTransitions().isEmpty()) // No transitions means must be deterministic -> doesn't break any rules necessarily
+        if(getTransitions().isEmpty()) // No transitions means must be deterministic -> doesn't break any rules necessarily so it is true
         {
             System.err.println("This FSA has no transitions! It is considered deterministic by default.");
             return true;
@@ -265,6 +262,7 @@ public class FiniteStateAutomata
         return false;
     }
 
+    // Convert FSA -> DFA in place
     public void toDFA()
     {
         // Error handling blocks
@@ -293,7 +291,7 @@ public class FiniteStateAutomata
             }
         }
 
-        // When coming back to this - helps understand that DFA is set of NFA stateIds, and these are stored as comma seperated strings, but for processing we use the sets
+        // When coming back to this - helps to understand that DFA is set of NFA stateIds, and these are stored as comma seperated strings, but for processing we use the sets
 
         HashMap<String, State> dfaStates = new HashMap<>(); // Map of new state IDs to State objects
         Set<Transition> dfaTransitions = new HashSet<>(); // Set of transitions for the DFA
