@@ -83,6 +83,7 @@ public class FiniteStateAutomata
             return; // Return to continue input without adding transition
         }
 
+        // Duplicate transitions automatically prevented by HashSet
         getTransitions().add(new Transition(getStates().get(fromStateID), symbol, getStates().get(toStateID)));
     }
 
@@ -295,7 +296,7 @@ public class FiniteStateAutomata
 
         HashMap<String, State> dfaStates = new HashMap<>(); // Map of new state IDs to State objects
         Set<Transition> dfaTransitions = new HashSet<>(); // Set of transitions for the DFA
-        Map<Set<String>, String> stateSetToIDMap = new HashMap<>(); // Map of sets of NFA states to DFA state IDs
+        HashMap<Set<String>, String> stateSetToIDMap = new HashMap<>(); // Map of sets of NFA states to DFA state IDs
 
         Set<String> initialDFAState = closure(getstartState().getID()); // Start state for DFA is closure of NFA start state -> removes all epsilon transitions
         initialDFAState.add(getstartState().getID());
