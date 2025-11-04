@@ -15,7 +15,7 @@ public class State
         this.isStart = isStart;
     }
 
-    // Setters - Encapsulation
+    // Setters - Encapsulation/Data Abstraction
     public void setAccepting(boolean isAccepting)
     {
         this.isAccepting = isAccepting;
@@ -26,7 +26,7 @@ public class State
         this.isAccepting = isAccepting;
     }
 
-    // Getters - Encapsulation
+    // Getters - Encapsulation/Data Abstraction
     public String getID()
     {
         return this.id;
@@ -70,6 +70,6 @@ public class State
     @Override
     public String toString()
     {
-        return("State ID: " + getID() + " -> Accepting: " + getAccepting() + " StartState: " + getStart());
+        return("State ID: " + getID() + " -> Accepting: " + getAccepting() + " | StartState: " + getStart());
     }
 }
