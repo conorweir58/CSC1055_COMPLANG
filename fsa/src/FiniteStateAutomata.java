@@ -261,7 +261,7 @@ public class FiniteStateAutomata
     }
 
     // Private helper method for toDFA() -> checks if a given set of NFA states contains an acceptance state -> therefore it is also DFA accptance
-    private boolean isDFAAcceptState(Set<String> nfaStates)
+    private boolean isDFAAcceptState(Set<String> nfaStates) // -> Process Abstraction
     {
         for(String stateID: nfaStates)
         {
